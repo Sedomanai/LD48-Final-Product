@@ -128,9 +128,9 @@ namespace Ilang {
             Init();
         }
 
-        public void Init() {
+        public override void Init() {
             gameObject.name = "[Sound Manager]";
-            transform.position = Camera.main.transform.position;
+            //transform.position = Camera.main.transform.position;
             surefirePath(ref _BGMDirectory);
             surefirePath(ref _SFXDirectory);
             _sfxSource = gameObject.AddComponent<AudioSource>();
@@ -142,7 +142,8 @@ namespace Ilang {
             }
 
             ParseMarker();
-            SceneManager.sceneLoaded += AdjustToCamera;
+            // why do I need this again?...
+            //SceneManager.sceneLoaded += AdjustToCamera; 
         }
 
         void ParseMarker() {
