@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Ilang;
 
 public class Shop : MonoBehaviour
@@ -24,11 +25,11 @@ public class Shop : MonoBehaviour
     }
 
     [SerializeField]
-    SpriteRenderer _shopUI;
+    Image _shopUI;
     [SerializeField]
-    SpriteRenderer _leftArrow;
+    Image _leftArrow;
     [SerializeField]
-    SpriteRenderer _rightArrow;
+    Image _rightArrow;
     [SerializeField]
     SpriteRenderer _slot;
 
@@ -82,6 +83,7 @@ public class Shop : MonoBehaviour
     void ShowUI() {
         selectIndex = Mathf.Clamp(selectIndex, 0, _items.Count -1);
         _slot.sprite = _items[selectIndex].sprite;
+        //_slot.SetNativeSize();
         _description.ChangeText(_items[selectIndex].description);
         _gold.ChangeText(_items[selectIndex].cost.ToString());
 
