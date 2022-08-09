@@ -13,7 +13,8 @@ public class CeilingDeath : MonoBehaviour
     void OnCollisionStay2D(Collision2D collision) {
         if (collision.gameObject.GetComponent<Mole>()) {
             var jump = collision.gameObject.GetComponent<Jump2DModule>();
-            if (!jump.Jumping) {
+            if (jump.IsGround) {
+                //Debug.Log("jump death?");
                 OnCeilingDeath.Invoke();
             }
         }

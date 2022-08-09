@@ -57,11 +57,13 @@ public class Shop : MonoBehaviour
 
     int selectIndex = 0;
     List<ShopItem> _items;
+    Animator _anim;
 
     void Start() {
         ResetShop();
         ShowUI();
         _shopUI.gameObject.SetActive(false);
+        _anim = GetComponent<Animator>();
     }
 
     void ResetShop() {
@@ -161,5 +163,10 @@ public class Shop : MonoBehaviour
     public void Disable() {
         _shopUI.gameObject.SetActive(false);
         gameObject.SetActive(false);
+    }
+    public void TryCloseShop() {
+        if (_anim && gameObject.activeSelf) {
+            _anim.Play("shop_close");
+        }
     }
 }

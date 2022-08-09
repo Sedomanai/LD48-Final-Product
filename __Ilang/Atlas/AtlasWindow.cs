@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEditor.Animations;
 using UnityEditor;
 
@@ -20,10 +20,10 @@ namespace Ilang
         bool makeAnimationClips;
         bool makeController;
 
-        [ScriptedImporter(1, "atls")]
-        public class SrtImporter : ScriptedImporter
+        [UnityEditor.AssetImporters.ScriptedImporter(1, "atls")]
+        public class SrtImporter : UnityEditor.AssetImporters.ScriptedImporter
         {
-            public override void OnImportAsset(AssetImportContext c) {
+            public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext c) {
                 TextAsset subAsset = new TextAsset(File.ReadAllText(c.assetPath));
                 c.AddObjectToAsset("text", subAsset);
                 c.SetMainObject(subAsset);
