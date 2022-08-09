@@ -16,6 +16,7 @@ Since this only contains the Assets folder, you need to setup the project manual
 - Open Logo Scene. Please, read this and do this the first thing you clone this repository. This will setup your layer settings automatically
 - Goto Edit -> Project Settings -> Physics 2D. Change Y gravity to -35. Change default material to SimplePlayerMaterial (use the explorer button, easy to find)
 - Goto File -> Build Settings. Add all Scenes in this order: Logo, Game, and Stage Buffer
+- In the Package Manager install the ShaderGraph package (for Curtains)
 
 
 ## Bugs to Fix

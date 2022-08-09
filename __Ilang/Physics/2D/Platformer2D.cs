@@ -19,9 +19,10 @@ namespace Ilang
             mask.Add("Wall");
         }
 
-        // Update is called once per frame
-        void Update() {
-            UpdatePlatformer(true);
+        public void ResetAxis() {
+            _axis.x = 0.0f;
+            _axis.y = 0.0f;
+            _body.velocity = _axis;
         }
 
         protected void UpdatePlatformer(bool acceptJump) {

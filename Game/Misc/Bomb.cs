@@ -15,8 +15,13 @@ public class Bomb : MonoBehaviour
     [SerializeField]
     ObjectPool _starParticle;
 
-    public void Boom()
-    {
+    Animator _anim;
+
+    void Awake() {
+        _anim = GetComponent<Animator>();
+    }
+
+    public void Boom() {
         var cpos = baseMap.WorldToCell(transform.position);
         for (int i = -2; i < 3; i++) {
             for (int j = -2; j < 3; j++) {
@@ -26,6 +31,8 @@ public class Bomb : MonoBehaviour
                 BlowUp(cpos + new Vector3Int(i, j, 0));
             }
         }
+
+        _anim.Play("boom");
     }
 
     void OnEnable() {

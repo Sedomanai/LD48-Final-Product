@@ -22,13 +22,13 @@ namespace Ilang
 
         IEnumerator CoEnd() {
             if (_closingCurtainState != "")
-                CurtainMgr.Instance.Play(_closingCurtainState, LoadNextScene);
+                CurtainMgr.Instance.Play(_closingCurtainState, LoadNextScene); 
             else {
                 yield return new WaitForSeconds(_fadeOutSeconds);
                 LoadNextScene();
             }
         }
-        void LoadNextScene() {
+        public void LoadNextScene() {
             AsyncOperation op = SceneManager.LoadSceneAsync(_nextStageName);
         }
     }

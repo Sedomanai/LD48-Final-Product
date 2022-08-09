@@ -27,8 +27,6 @@ namespace Ilang
             yield return new WaitForSeconds(_stageWarmUpSeconds);
             if (_stageBgm)
                 SoundMgr.Instance.PlayBGM(_stageBgm);
-            if (_openingCurtainState != "")
-                CurtainMgr.Instance.Play(_openingCurtainState, OnStart.Invoke);
             else OnStart.Invoke();
         }
 
