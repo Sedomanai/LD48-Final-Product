@@ -18,8 +18,9 @@ public class DigModule : MonoBehaviour
     [SerializeField]
     Tilemap baseMap;
 
-    Digger[] _diggers;
-    Digger2 _slash;
+    List<Transform> _digpos;
+    Transform _slashpos;
+
     bool _digging = false;
     public bool Digging { get { return _digging; } }
 
@@ -29,10 +30,16 @@ public class DigModule : MonoBehaviour
 
     int _digDepth = 0;
 
-    void Awake()
-    {
-        _diggers = gameObject.GetComponentsInChildren<Digger>();
-        _slash = gameObject.GetComponentInChildren<Digger2>();
+    void Awake() {
+        _digpos = new List<Transform>();
+        var children = gameObject.GetComponentsInChildren<Transform>();
+        foreach (Transform tr in children) {
+            if (tr.name == "LB Dig" || tr.name == "RB Dig") {
+                _digpos.Add(tr);
+            }
+            if (tr.name == "R Dig")
+                _slashpos = tr;
+        }
     }
 
     public void DigStart() {
@@ -43,30 +50,30 @@ public class DigModule : MonoBehaviour
     }
 
     public void Slash() {
-        if (_slash) {
+        if (_slashpos) {
             HashSet<IlangTile> visited = new HashSet<IlangTile>();
-            DigBody(_slash.gameObject, visited, true);
+            DigBody(_slashpos, visited, true);
             OnSlash.Invoke();
         }
     }
 
     public void Dig() {
         HashSet<IlangTile> visited = new HashSet<IlangTile>();
-        for (int i = 0; i < _diggers.Length; i++) {
-            DigBody(_diggers[i].gameObject, visited, false);
+        for (int i = 0; i < _digpos.Count; i++) {
+            DigBody(_digpos[i], visited, false);
         }
         OnDig.Invoke();
     }
 
     void Update() {
         if (!TimeMgr.Instance.Paused && Game.Instance.groundText) {
-            _digDepth = -baseMap.WorldToCell(transform.position).y -3;
+            _digDepth = -baseMap.WorldToCell(transform.position).y - 3;
 
             if (_digDepth < 0)
                 _digDepth = 0;
 
-            var max =  Mathf.Max(Game.Instance.maxDepth, _digDepth);
-            if (max <= _digDepth) { 
+            var max = Mathf.Max(Game.Instance.maxDepth, _digDepth);
+            if (max <= _digDepth) {
                 Game.Instance.groundText.ChangeText(_digDepth.ToString());
                 Game.Instance.maxDepth = _digDepth;
                 if (Game.Instance.maxDepth > 150) {
@@ -79,8 +86,8 @@ public class DigModule : MonoBehaviour
         }
     }
 
-    void DigBody(GameObject dig, HashSet<IlangTile> visited, bool slash) {
-        var cpos = baseMap.WorldToCell(dig.transform.position);
+    void DigBody(Transform dig, HashSet<IlangTile> visited, bool slash) {
+        var cpos = baseMap.WorldToCell(dig.position);
 
         Dig(cpos, visited);
         if (Game.Instance.digLevel > 1) {

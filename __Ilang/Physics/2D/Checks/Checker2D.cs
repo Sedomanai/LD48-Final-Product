@@ -12,6 +12,9 @@ namespace Ilang
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(BoxCollider2D))]
     public class Checker2D : MonoBehaviour {
+
+        // Often the physics object is separate from the root object.
+        // This makes sure the collision relays the root object instead of the object directly containing this script.
         [SerializeField]
         GameObject root;
 
