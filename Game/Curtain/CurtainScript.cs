@@ -25,7 +25,7 @@ namespace Ilang
         [SerializeField]
         float transitionDelaySeconds;
         [SerializeField]
-        Scene nextScene;
+        string nextScene;
 
         void Start() {
             Image curtain = GetComponentInChildren<Image>();
@@ -52,9 +52,9 @@ namespace Ilang
             StartCoroutine(FadeOutCO());
         }
         IEnumerator FadeOutCO() {
-            yield return StartCoroutine(fadeIn.FadeOutCO(preserveRatio));
-            yield return new WaitForSeconds(transitionDelaySeconds);
-            SceneManager.LoadSceneAsync(nextScene.name);
+            yield return StartCoroutine(fadeOut.FadeInCO(preserveRatio));
+            //yield return new WaitForSeconds(transitionDelaySeconds);
+            SceneManager.LoadSceneAsync(nextScene);
 
         }
     }

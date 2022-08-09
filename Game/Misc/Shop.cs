@@ -81,7 +81,7 @@ public class Shop : MonoBehaviour
     }
 
     void ShowUI() {
-        selectIndex = Mathf.Clamp(selectIndex, 0, _items.Count -1);
+        selectIndex = Mathf.Clamp(selectIndex, 0, _items.Count - 1);
         _slot.sprite = _items[selectIndex].sprite;
         //_slot.SetNativeSize();
         _description.ChangeText(_items[selectIndex].description);
@@ -99,30 +99,30 @@ public class Shop : MonoBehaviour
 
         if (Game.Instance.goldInt.Value >= item.cost) {
             SoundMgr.Instance.PlaySFX(_buyItem);
-            Game.Instance.goldInt.AddValue(-item.cost); 
+            Game.Instance.goldInt.AddValue(-item.cost);
             switch (item.type) {
-                case ShopItemType.Shoe:
-                    Game.Instance.shoeLevel++;
-                    break;
-                case ShopItemType.Claw:
-                    Game.Instance.digLevel++;
-                    if (Game.Instance.digLevel == 3) {
-                        Game.Instance.stoneInt.SetValue(50);
-                    }
-                    break;
-                case ShopItemType.Bomb:
-                    Game.Instance.bombInt.AddValue(1);
-                    break;
-                case ShopItemType.Time:
-                    Game.Instance.worm = true;
-                    break;
+            case ShopItemType.Shoe:
+                Game.Instance.shoeLevel++;
+                break;
+            case ShopItemType.Claw:
+                Game.Instance.digLevel++;
+                if (Game.Instance.digLevel == 3) {
+                    Game.Instance.stoneInt.SetValue(50);
+                }
+                break;
+            case ShopItemType.Bomb:
+                Game.Instance.bombInt.AddValue(1);
+                break;
+            case ShopItemType.Time:
+                Game.Instance.worm = true;
+                break;
             }
             ResetShop();
         }
     }
 
 
-     void Update() {
+    void Update() {
         if (_shopUI.gameObject.activeSelf && _items.Count > 0) {
             ShowUI();
             if (Input.GetKeyDown(KeyCode.LeftArrow)) {
@@ -137,15 +137,14 @@ public class Shop : MonoBehaviour
                 }
             } else if (Input.GetKeyDown(KeyCode.Space)) {
                 BuyItem();
-            } else if (Input.GetKeyDown(KeyCode.Escape)) { 
+            } else if (Input.GetKeyDown(KeyCode.Escape)) {
                 ExitShop();
                 SoundMgr.Instance.PlaySFX(_shopClose);
             }
         } else
             ExitShop();
     }
-    public void EnterShop()
-    {
+    public void EnterShop() {
         if (_items.Count > 0) {
             if (Game.Instance.State == Game.eState.Overworld) {
                 SoundMgr.Instance.PlaySFX(_shopOpen);
@@ -155,8 +154,7 @@ public class Shop : MonoBehaviour
             }
         }
     }
-    public void ExitShop()
-    {
+    public void ExitShop() {
         Game.Instance.ShopMode(false);
         _shopUI.gameObject.SetActive(false);
         TimeMgr.Instance.UnpauseGame();

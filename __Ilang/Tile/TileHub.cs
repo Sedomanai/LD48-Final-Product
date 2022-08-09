@@ -48,8 +48,10 @@ namespace Ilang
 
             hub.ppu = EditorGUILayout.IntField("Pixel Per Unit", hub.ppu);
 
-            var count = EditorGUILayout.IntField("Mold Count", hub.molds.Count);
-            SyncMolds(count);
+            var count = EditorGUILayout.DelayedIntField("Mold Count", hub.molds.Count);
+            if (count != hub.molds.Count) {
+                SyncMolds(count);
+            }
 
             for (int i = 0; i < hub.molds.Count; i++) {
                 EditorGUILayout.LabelField("Mold " + i);
@@ -74,29 +76,35 @@ namespace Ilang
 
             if (EditorGUI.EndChangeCheck()) {
                 EditorUtility.SetDirty(hub);
+                serializedObject.ApplyModifiedProperties();
             }
-
-            serializedObject.ApplyModifiedProperties();
-
         }
         
         void SyncMolds(int count) {
-            var buffer = hub.molds;
-            hub.molds = new List<TileMold>();
-            for (int i = 0; i < buffer.Count; i++) {
-                if (i < count) {
-                    hub.molds.Add(buffer[i]);
+            var currCount = hub.molds.Count;
+            if (count != currCount) {
+                if (count < currCount) {
+                    bool trim = EditorUtility.DisplayDialog("Hub Trim Warning Dialog", "WARNING: Target mold count is lower than current mold count. Proceeding will destroy some trailing molds which will affect all existing tiles dependent on those molds when regenerated. Continue?", "Yes", "No");
+                    if (trim) {
+                        var buffer = hub.molds;
+                        hub.molds = new List<TileMold>();
+                        for (int i = 0; i < buffer.Count; i++) {
+                            if (i < count) {
+                                hub.molds.Add(buffer[i]);
+                            } else {
+                                AssetDatabase.RemoveObjectFromAsset(buffer[i]);
+                            }
+                        }
+                    }
                 } else {
-                    AssetDatabase.RemoveObjectFromAsset(buffer[i]);
+                    for (int i = currCount; i < count; i++) {
+                        var mold = CreateInstance<TileMold>();
+                        mold.name = "mold_" + i;
+                        mold.hideFlags = HideFlags.HideInHierarchy;
+                        AssetDatabase.AddObjectToAsset(mold, AssetDatabase.GetAssetPath(target));
+                        hub.molds.Add(mold);
+                    }
                 }
-            }
-
-            for (int i = buffer.Count; i < count; i++) {
-                var mold = CreateInstance<TileMold>();
-                mold.name = "mold_" + i;
-                mold.hideFlags = HideFlags.HideInHierarchy;
-                AssetDatabase.AddObjectToAsset(mold, AssetDatabase.GetAssetPath(target));
-                hub.molds.Add(mold);
             }
         }
 
@@ -153,8 +161,12 @@ namespace Ilang
                     }
                 }
 
+                hub.texture.alphaIsTransparency = true;
+                hub.texture.Compress(true);
                 hub.texture.filterMode = FilterMode.Point;
                 hub.texture.Apply();
+
+                //SpriteAtlas;
             }
         }
 
