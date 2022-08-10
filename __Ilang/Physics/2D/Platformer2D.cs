@@ -9,8 +9,8 @@ namespace Ilang
     public class Platformer2D : TopDown2D
     {
         public KeyCode jumpKey;
-        protected Jump2DModule _jump;
         public LayerMask mask;
+        protected Jump2DModule _jump;
 
         override protected void Awake() {
             base.Awake();
@@ -37,7 +37,6 @@ namespace Ilang
                 RaycastHit2D lhit = Physics2D.Raycast(center - halfWidth, Vector2.down, distance, mask);
                 RaycastHit2D rhit = Physics2D.Raycast(center + halfWidth, Vector2.down, distance, mask);
                 _jump.JumpPreCheck(mhit || lhit || rhit);
-
 
                 Debug.DrawRay(center, Vector2.down * distance, Color.green);
                 Debug.DrawRay(center - halfWidth, Vector2.down * distance, Color.green);
