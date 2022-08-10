@@ -110,7 +110,7 @@ namespace Ilang
 
         void Generate() {
             if (hub.molds.Count > 0) {
-                var buffer = new Texture2D(hub.texsize.x, hub.texsize.y, TextureFormat.RGBA32, false);
+                var buffer = new Texture2D(hub.texsize.x, hub.texsize.y, TextureFormat.RGBA32, true);
                 if (hub.texture) {
                     EditorUtility.CopySerialized(buffer, hub.texture);
                 } else {
