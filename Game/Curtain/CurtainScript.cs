@@ -51,6 +51,7 @@ namespace Ilang
         public void FadeOut() {
             StartCoroutine(FadeOutCO());
         }
+
         IEnumerator FadeOutCO() {
             yield return StartCoroutine(fadeOut.FadeInCO(preserveRatio));
             //yield return new WaitForSeconds(transitionDelaySeconds);
