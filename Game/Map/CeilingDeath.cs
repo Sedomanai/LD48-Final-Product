@@ -6,10 +6,14 @@ using Ilang;
 
 public class CeilingDeath : MonoBehaviour
 {
-    [SerializeField]
     Camera2D _cam;
 
     public UnityEvent OnCeilingDeath; 
+
+    void Awake() {
+        _cam = Camera.main.GetComponent<Camera2D>();
+    }
+
     void OnCollisionStay2D(Collision2D collision) {
         if (collision.gameObject.GetComponent<Mole>()) {
             var jump = collision.gameObject.GetComponent<Jump2DModule>();
