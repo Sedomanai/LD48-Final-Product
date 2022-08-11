@@ -120,6 +120,8 @@ public class ScrollTilemap : MonoBehaviour
             var tile = tiles[i];
             var cpos = _writer + new Vector3Int(i % 18, -i / 18, 0);
             if (tile && tile.quirks.index == 3) {
+                if (cpos.y == -13)
+                    _tilemap.SetTile(cpos, null);
                 _itemr.TranslateItem(tile).transform.position = _tilemap.CellToWorld(cpos) + new Vector3(0.5f, 0.5f, 0);
             } else {
                 _tilemap.SetTile(cpos, tiles[i]);
@@ -133,7 +135,7 @@ public class ScrollTilemap : MonoBehaviour
     }
 
     bool IsReadyToFill(float writerWorldY) {
-        return ((_molePos.position.y - writerWorldY) < (_cam.Size.y / 2.0f + 2));
+        return ((_molePos.position.y - writerWorldY) < (_cam.Size.y / 2.0f + 3));
     }
 
     void Update() {

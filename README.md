@@ -21,20 +21,29 @@ Since this only contains the Assets folder, you need to setup the project manual
 Since the original was made in 2 days it was full of bugs. Here's a list of bugs I managed to fix and other changes made after the jam
 
 ### Bugs
+- Rearrange sorting order for all game elements including items and UI
 - Screen transition (i.e. curtain) now fits the screen
-- UI now up to scale in fullscreen mode 
+- UI is now up to scale in fullscreen (currently 1024 x 768)
 - Bomb # text now shows in web build
 - Fixed tearing lines between tiles
 - Fixed bug where camera gets stuck in gets stuck in either side of the map
+- Prevent Mole controls before and after Overworld/Playing state
 - Correct ceiling death physics and animation
 - Map generation now works as intended (does not repeat, almost always fits)
 - Tiles and items are now optimized and garbage collected offscreen (FPS fix)
-
+- Stop dual bgm sources from overlapping when returning out of window focus
+- Breakable stones resets count upon death with Game digLevel = 3, as intended
+- Prevented coins from spawning in hard blocks in the beginning
+- Prevented occasional late map generation breaking immersion
+  
 ### Changes
-- Increased screen size
+- Increased screen size (1024 x 768)
+- Optimized map procedural generation algorithm from O(logN) to O(N) 
+- Disable items back to pools so they can be recycled
+- Created a Garbage Collector above game camera which disables pool items and erase tiles
+  (This also fixed FPS and Mole from occasionally bouncing off the low end of the camera)
 
-### Bugs to Fix & Changes to Make (TEMP)
+### Changes to Make (TEMP)
 - May decrease all item costs drastically
 - May improve initial and/or elementary upgrade stat
-- Audio overlapping when returning out of window focus (important)
 

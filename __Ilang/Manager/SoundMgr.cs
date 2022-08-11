@@ -19,6 +19,7 @@ namespace Ilang {
         }
         public struct BGMPort {
             AudioSource source1, source2;
+            float prevTime;
             AudioClip clip;
             TimeMarker timeMarker;
             bool isFirstSource;
@@ -39,10 +40,6 @@ namespace Ilang {
                 source2 = obj.AddComponent<AudioSource>();
                 obj.transform.SetParent(parent.transform);
                 isIntro = false;
-            }
-
-            public void SetVolume(float value) {
-                source1.volume = source2.volume = value;
             }
 
             public void Stop() {
@@ -82,7 +79,7 @@ namespace Ilang {
                     new Vector2(timeMarker.introStart, timeMarker.introEnd) :
                     new Vector2(timeMarker.loopStart, timeMarker.loopEnd);
 
-                if (!giver.isPlaying || giver.time >= loop.y) {
+                if (giver.time >= loop.y || (!giver.isPlaying && giver.time == 0.0f)) {
                     receiver.volume = giver.volume;
                     receiver.clip = clip;
                     receiver.time = loop.x;
@@ -102,7 +99,7 @@ namespace Ilang {
         TextAsset _timeMarkerFile;
 
         float _bgmMax, _sfxMax;
-        public float bgmMax { set { _bgmMax = value; _port.SetVolume(0.7f); } get { return _bgmMax; } }
+        public float bgmMax { set { _bgmMax = value; _port.Volume = 0.7f; } get { return _bgmMax; } }
         public float sfxMax { set { _sfxMax = value; _sfxSource.volume = _sfxMax / 500.0f; } get { return _sfxMax; } }
 
         AudioSource _sfxSource;
@@ -179,10 +176,6 @@ namespace Ilang {
             }
         }
 
-        void AdjustToCamera(Scene scene, LoadSceneMode mode) {
-            transform.position = Camera.main.transform.position;
-        }
-
         public void PlayBGM(AudioClip clip) {
             if (clip && _port.Clip != clip) {
                 var key = clip.name;
@@ -227,12 +220,12 @@ namespace Ilang {
 
 
         float _fadeSeconds;
-        public void FadeOut(float seconds) {
+        public void FadeOutBGM(float seconds) {
             _fadeSeconds = seconds;
-            StartCoroutine("FadeOutBGM");
+            StartCoroutine("FadeOutCO");
         }
 
-        IEnumerator FadeOutBGM() {
+        IEnumerator FadeOutCO() {
             float initVolume = _port.Volume;
             float t = 0f;
 
