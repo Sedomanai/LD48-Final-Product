@@ -7,8 +7,8 @@ namespace Ilang {
     public class FileMgr : Singleton<FileMgr> {
         BinaryFormatter _bf;
         FileStream _file;
-        MemoryStream _ms;
-        bool _loaded;
+        //MemoryStream _ms;
+        //bool _loaded;
 
         public string dataPath { private set; get; }
 
@@ -35,19 +35,19 @@ namespace Ilang {
             }
         }
 
-        public void LoadToAndroid<T>(ref T container, string path) {
-            WWW file = new WWW(path);
-            while (!file.isDone) {; }
-            _ms = new MemoryStream(file.bytes);
-            container = (T)_bf.Deserialize(_ms);
-            _ms.Close();
-        }
+        //public void LoadToAndroid<T>(ref T container, string path) {
+        //    WWW file = new WWW(path);
+        //    while (!file.isDone) {; }
+        //    _ms = new MemoryStream(file.bytes);
+        //    container = (T)_bf.Deserialize(_ms);
+        //    _ms.Close();
+        //}
 
-        IEnumerator LoadToAndroidCoroutine(string path) {
-            WWW file = new WWW(path);
-            yield return file;
-            _ms = new MemoryStream(file.bytes);
-            _loaded = true;
-        }
+        //IEnumerator LoadToAndroidCoroutine(string path) {
+        //    WWW file = new WWW(path);
+        //    yield return file;
+        //    _ms = new MemoryStream(file.bytes);
+        //    _loaded = true;
+        //}
     }
 }

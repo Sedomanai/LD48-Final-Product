@@ -10,39 +10,28 @@ public class ScrollTileMap : MonoBehaviour
 {
     [SerializeField]
     float _scrollRate = 20.0f;
-
-    [SerializeField]
-    Camera2D _cam;
-    [SerializeField]
-    Transform _molePos;
     [SerializeField]
     GameObject _mapPieces;
     [SerializeField]
     MapPiece _ceremonyMapPiece;
 
-    Vector3Int _writer;
-    Vector3 _writerWorld;
-
     Dictionary<int, List<MapPiece>> _mapDict = new Dictionary<int, List<MapPiece>>();
-
-
+    Transform _molePos;
+    Camera2D _cam;
+    Vector3Int _writer;
     MapPiece _prevPiece = null;
     MapPiece _nextPiece = null;
-
     float rate = 0.0f;
-
-
-    public float ScrollRate { set { _scrollRate = value; } }
     Tilemap _tilemap;
     Rigidbody2D _body;
     ItemReplacer _itemr;
 
-    // Start is called before the first frame update
     void Awake() {
+        _cam = Camera.main.GetComponent<Camera2D>();
         _tilemap = GetComponentInChildren<Tilemap>();
         _body = GetComponent<Rigidbody2D>();
         _itemr = GetComponent<ItemReplacer>();
-
+        _molePos = GetComponentInChildren<Mole>().transform;
         _writer = new Vector3Int(-9, -13, 0);
 
         for (int i = 0; i < 8; i++) {
@@ -61,8 +50,9 @@ public class ScrollTileMap : MonoBehaviour
         }
     }
 
+    /**************** Enable this code when there are items in starting position. So far there is none.
     void Start() {
-        ReplaceItem();
+        //ReplaceItem();
     }
 
     void ReplaceItem() {
@@ -77,10 +67,7 @@ public class ScrollTileMap : MonoBehaviour
             }
         }
     }
-
-    bool IsReadyToFill() {
-        return ((_molePos.position.y - _writerWorld.y) < (_cam.Size.y / 2.0f + 2));
-    }
+    /**/
 
     void FillNext() {
         if (Game.Instance.ceremonyEligible  && !Game.Instance.ceremonyDone) {
@@ -126,10 +113,13 @@ public class ScrollTileMap : MonoBehaviour
         rate = _scrollRate;
     }
 
-    // Update is called once per frame
+    bool IsReadyToFill(float writerWorldY) {
+        return ((_molePos.position.y - writerWorldY) < (_cam.Size.y / 2.0f + 2));
+    }
+
     void Update() {
-        _writerWorld = _tilemap.CellToWorld(_writer) + new Vector3(0.0f, 1.0f, 0.0f);
-        if (!TimeMgr.Instance.Paused && IsReadyToFill()) {
+        float writerWorldY = _tilemap.CellToWorld(_writer).y + 1.0f;  //+ new Vector3(0.0f, 1.0f, 0.0f);
+        if (!TimeMgr.Instance.Paused && IsReadyToFill(writerWorldY)) {
             FillNext();
         }
 

@@ -12,7 +12,8 @@ public class ItemReplacer : MonoBehaviour
     {
         public IlangTile tile;
         public ObjectPool pool;
-    } public List<Unit> _units;
+    }
+    public List<Unit> _units;
 
     Dictionary<IlangTile, ObjectPool> _dictionary = new Dictionary<IlangTile, ObjectPool>();
 
@@ -21,12 +22,12 @@ public class ItemReplacer : MonoBehaviour
             _dictionary.Add(_units[i].tile, _units[i].pool);
         }
     }
-    
 
     public GameObject TranslateItem(IlangTile tile) {
         if (_dictionary.ContainsKey(tile)) {
             return _dictionary[tile].InstantiateFromPool();
-        } return null;
+        }
+        return null;
 
     }
 }
