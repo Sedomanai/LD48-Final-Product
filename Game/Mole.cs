@@ -39,6 +39,7 @@ public class Mole : Platformer2D
         _box.enabled = false;
         ResetAxis();
         GetComponentInChildren<Camera2DSubject>().ResetTrigger();
+        GetComponent<SpriteRenderer>().sortingOrder = 5;
         SoundMgr.Instance.PlaySFX(_deathClip);
         for (uint i = 0; i < _anims.Length; i++) {
             var anim = _anims[i];

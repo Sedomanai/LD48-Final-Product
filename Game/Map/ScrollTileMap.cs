@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Ilang;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class ScrollTileMap : MonoBehaviour
+public class ScrollTilemap : MonoBehaviour
 {
     [SerializeField]
     float _scrollRate = 20.0f;
@@ -15,12 +16,14 @@ public class ScrollTileMap : MonoBehaviour
     [SerializeField]
     MapPiece _ceremonyMapPiece;
 
-    Dictionary<int, List<MapPiece>> _mapDict = new Dictionary<int, List<MapPiece>>();
+    List<List<MapPiece>> _mapPieceByOpenings;
+
+    //Dictionary<int, List<MapPiece>> _mapPieceByOpenings = new Dictionary<int, List<MapPiece>>();
     Transform _molePos;
     Camera2D _cam;
     Vector3Int _writer;
     MapPiece _prevPiece = null;
-    MapPiece _nextPiece = null;
+    MapPiece _currPiece = null;
     float rate = 0.0f;
     Tilemap _tilemap;
     Rigidbody2D _body;
@@ -33,18 +36,19 @@ public class ScrollTileMap : MonoBehaviour
         _itemr = GetComponent<ItemReplacer>();
         _molePos = GetComponentInChildren<Mole>().transform;
         _writer = new Vector3Int(-9, -13, 0);
+        _mapPieceByOpenings = new List<List<MapPiece>>();
 
-        for (int i = 0; i < 8; i++) {
-            int d = 1 << i;
-            _mapDict.Add(d, new List<MapPiece>());
+        for (int i = 0; i < MapPiece.EntryTypeCount; i++) {
+            _mapPieceByOpenings.Add(new List<MapPiece>());
         }
 
         var pieces = _mapPieces.GetComponentsInChildren<MapPiece>(true);
-        foreach (var piece in pieces) {
-            for (int i = 0; i < 8; i++) {
-                int d = (1 << i);
-                if (piece.openingType.HasFlag((MapPiece.eEntryType)(d))) {
-                    _mapDict[d].Add(piece);
+        for (int i = 0; i < pieces.Length; i++) {
+            var piece = pieces[i];
+            piece.index = i;
+            for (int j = 0; j < MapPiece.EntryTypeCount; j++) {
+                if (piece.openingType.HasFlag((MapPiece.eEntryType)(1 << j))) {
+                    _mapPieceByOpenings[j].Add(piece);
                 }
             }
         }
@@ -70,33 +74,48 @@ public class ScrollTileMap : MonoBehaviour
     /**/
 
     void FillNext() {
+        _currPiece = null;
+
         if (Game.Instance.ceremonyEligible  && !Game.Instance.ceremonyDone) {
-            _prevPiece = _ceremonyMapPiece;
+            _currPiece = _ceremonyMapPiece;
             Game.Instance.ceremonyDone = true;
         } else {
-            List<MapPiece> list = null;
-            if (!_prevPiece) {
-                int d = 1 << Random.Range(0, 8);
-                list = _mapDict[d];
+            List<MapPiece> eligible = null;
+
+            if (!_prevPiece) { // in the beginning
+                int entry = Random.Range(0, MapPiece.EntryTypeCount);
+                eligible = _mapPieceByOpenings[entry];
             } else {
-                List<int> rr = new List<int>();
-                for (int i = 0; i < 8; i++) {
-                    int d = i << i;
-                    if (_prevPiece.closingType.HasFlag((MapPiece.eEntryType)(d))) {
-                        rr.Add(d);
+                List<int> entries = new List<int>();
+                for (int i = 0; i < MapPiece.EntryTypeCount; i++) {
+                    if (_prevPiece.closingType.HasFlag((MapPiece.eEntryType)(1 << i))) {
+                        entries.Add(i);
                     }
                 }
-                var key = rr[Random.Range(0, rr.Count)];
-                if (_mapDict.ContainsKey(key))
-                    list = _mapDict[key];
+
+                var key = entries[Random.Range(0, entries.Count)];
+                if (_mapPieceByOpenings.Count > key) // double check
+                    eligible = _mapPieceByOpenings[key];
             }
-            if (list != null) {
-                _prevPiece = list[Random.Range(0, list.Count)];
+
+            if (eligible != null) { // double check, null should not happen
+                while (true) {
+                    int select = Random.Range(0, eligible.Count);
+                    _currPiece = eligible[select];
+                    if (eligible.Count > 1 && _currPiece == _prevPiece) {
+                        eligible.RemoveAt(select);
+                    } else 
+                        break;
+                }
             }
         }
 
+        FillNextTiles();
+        _prevPiece = _currPiece;
+    }
 
-        var tiles = _prevPiece.Tiles;
+    void FillNextTiles() {
+        var tiles = _currPiece.Tiles;
         for (int i = 0; i < tiles.Length; i++) {
             var tile = tiles[i];
             var cpos = _writer + new Vector3Int(i % 18, -i / 18, 0);

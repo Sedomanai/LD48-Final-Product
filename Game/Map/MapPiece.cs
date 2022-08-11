@@ -11,10 +11,10 @@ using UnityEditor;
 
 public class MapPiece : MonoBehaviour
 {
-    const int MapWidth = 16;
-    const int MapHeight = 5;
-    const int FramedMapWidth = MapWidth + 2;
-    const int EntryTypeCount = 8;
+    public const int MapWidth = 16;
+    public const int MapHeight = 5;
+    public const int FramedMapWidth = MapWidth + 2;
+    public const int EntryTypeCount = 8;
 
     // make an enum somewhere if it's really necessary
     //const int ItemIndex = 3;
@@ -29,6 +29,7 @@ public class MapPiece : MonoBehaviour
     IlangTile _dirtTile;
     IlangTile[] _tiles;
 
+    public int index;
     public eEntryType openingType;
     public eEntryType closingType;
 

@@ -18,7 +18,7 @@ Since this only contains the Assets folder, you need to setup the project manual
 - Default setup for WebGL build (turn off compression, lightmap data, auto webgl version target, etc)
 
 ## Fixed Bugs & Changes
-Since the original was made in 2 days it was full of bugs. Here's a list of bugs I managed to fix after the jam
+Since the original was made in 2 days it was full of bugs. Here's a list of bugs I managed to fix and other changes made after the jam
 
 ### Bugs
 - Screen transition (i.e. curtain) now fits the screen
@@ -27,14 +27,14 @@ Since the original was made in 2 days it was full of bugs. Here's a list of bugs
 - Fixed tearing lines between tiles
 - Fixed bug where camera gets stuck in gets stuck in either side of the map
 - Correct ceiling death physics and animation
+- Map generation now works as intended (does not repeat, almost always fits)
+- Tiles and items are now optimized and garbage collected offscreen (FPS fix)
 
 ### Changes
 - Increased screen size
 
 ### Bugs to Fix & Changes to Make (TEMP)
-- Mole bounces off lower camera threshold when too far down (probably due to lack of tile optimization)
-- Map pieces do not fit with each other sometimes
-- Often a single map piece repeats itself indefinitely for no apparent reason
 - May decrease all item costs drastically
-- May improve initial and/or elemetnary upgrade stat
+- May improve initial and/or elementary upgrade stat
+- Audio overlapping when returning out of window focus (important)
 
