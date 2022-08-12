@@ -59,8 +59,10 @@ namespace Ilang
 #if UNITY_EDITOR
         public void OnInspector2() {
             EditorGUI.indentLevel++;
-            ceiling = EditorGUILayout.FloatField("Ceiling", ceiling);
-            floor = EditorGUILayout.FloatField("Floor", floor);
+            if (!freeze) {
+                ceiling = EditorGUILayout.FloatField("Ceiling", ceiling);
+                floor = EditorGUILayout.FloatField("Floor", floor);
+            }
             EditorGUI.indentLevel--;
         }
 #endif

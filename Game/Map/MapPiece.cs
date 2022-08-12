@@ -29,6 +29,9 @@ public class MapPiece : MonoBehaviour
     IlangTile _dirtTile;
     IlangTile[] _tiles;
 
+    [SerializeField]
+    bool isEnding = false;
+
     public int index;
     public eEntryType openingType;
     public eEntryType closingType;
@@ -50,7 +53,8 @@ public class MapPiece : MonoBehaviour
         gameObject.SetActive(false);
         _mapPiece = GetComponent<Tilemap>();
         List<IlangTile> tiles = new List<IlangTile>();
-        for (int i = 0; i < MapHeight; i++) {
+        int height = MapHeight + (isEnding ? 16 : 0);
+        for (int i = 0; i < height; i++) {
             for (int j = 0; j < FramedMapWidth; j++) {
                 tiles.Add(_mapPiece.GetTile<IlangTile>(new Vector3Int(j, -i-1, 0)));
             }
@@ -106,6 +110,7 @@ public class MapPiece : MonoBehaviour
         public override void OnInspectorGUI() {
             serializedObject.Update();
             EditorGUI.BeginChangeCheck();
+            map.isEnding = EditorGUILayout.Toggle("Is Ending", map.isEnding);
             var o = (eEntryType)EditorGUILayout.EnumFlagsField("Opening Type", map.openingType);
             var c = (eEntryType)EditorGUILayout.EnumFlagsField("Closing Type", map.closingType);
             if (GUILayout.Button("Find Tile Type")) {

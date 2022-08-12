@@ -17,7 +17,8 @@ public class Game : Singleton<Game>
         StartUp,
         Overworld,
         Playing,
-        GameOver
+        GameOver,
+        Ending
     }
     eState _state;
 
@@ -39,6 +40,9 @@ public class Game : Singleton<Game>
 
     public bool ceremonyEligible = false;
     public bool ceremonyDone = false;
+    public bool gameFinished = false;
+
+    public GameStatsSO stats;
 
     public void ShopMode(bool value) {
         ground.gameObject.SetActive(!value);
@@ -50,6 +54,15 @@ public class Game : Singleton<Game>
         shoeLevel = digLevel = 0;
         base.Awake();
         _state = eState.Logo;
+    }
+
+    public void resetStoneInt() {
+        stoneInt.SetValue(stats.resetStoneIntValue);
+    }
+
+    public void finishGame() {
+        ceremonyDone = ceremonyEligible = false;
+        gameFinished = true;
     }
 
     void Start() {

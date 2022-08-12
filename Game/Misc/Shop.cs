@@ -56,6 +56,9 @@ public class Shop : MonoBehaviour
     [SerializeField]
     AudioClip _buyItem;
 
+    [SerializeField]
+    GameStatsSO _stats;
+
     int selectIndex = 0;
     List<ShopItem> _items;
     Animator _anim;
@@ -107,7 +110,7 @@ public class Shop : MonoBehaviour
             case ShopItemType.Claw:
                 Game.Instance.digLevel++;
                 if (Game.Instance.digLevel == 3) {
-                    Game.Instance.stoneInt.SetValue(50);
+                    Game.Instance.resetStoneInt();
                 }
                 break;
             case ShopItemType.Bomb:

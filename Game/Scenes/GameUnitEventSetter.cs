@@ -29,7 +29,8 @@ public class GameUnitEventSetter : MonoBehaviour
         Game.Instance.ChangeState(Game.eState.Overworld);
     }
     public void Playing() {
-        Game.Instance.ChangeState(Game.eState.Playing);
+        if (Game.Instance.State == Game.eState.Overworld)
+            Game.Instance.ChangeState(Game.eState.Playing);
     }
     public void GameOver() {
         TimeMgr.Instance.PauseGame();

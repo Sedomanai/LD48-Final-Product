@@ -8,7 +8,12 @@ namespace Ilang
     {
         void Awake() {
             if (Game.Instance.digLevel == 3) {
-                Game.Instance.stoneInt.SetValue(50);
+                Game.Instance.resetStoneInt();
+            }
+
+            if (!Game.Instance.gameFinished) {
+                Game.Instance.ceremonyDone = false;
+                Game.Instance.ceremonyEligible = false;
             }
         }
     }

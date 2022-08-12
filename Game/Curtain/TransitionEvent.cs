@@ -51,14 +51,14 @@ namespace Ilang
         public float cutoff { get; }
 
         //TODO: Send this to generic method and/or util
-        //public static void PreserveRatio(Image image) {
-        //    var tr = image.GetComponent<RectTransform>();
-        //    if (Screen.width > Screen.height) {
-        //        tr.localScale = new Vector3(tr.localScale.x, (float)Screen.width / (float)Screen.height, tr.localScale.z);
-        //    } else {
-        //        tr.localScale = new Vector3((float)Screen.height / (float)Screen.width, tr.localScale.y, tr.localScale.z);
-        //    }
-        //}
+        public static void PreserveRatio(Image image) {
+            var tr = image.GetComponent<RectTransform>();
+            if (Screen.width > Screen.height) {
+                tr.localScale = new Vector3(tr.localScale.x, (float)Screen.width / (float)Screen.height, tr.localScale.z);
+            } else {
+                tr.localScale = new Vector3((float)Screen.height / (float)Screen.width, tr.localScale.y, tr.localScale.z);
+            }
+        }
 
         public void SetupImage(Image image) {
             this.image = image;

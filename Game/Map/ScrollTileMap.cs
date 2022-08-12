@@ -76,7 +76,7 @@ public class ScrollTilemap : MonoBehaviour
     void FillNext() {
         _currPiece = null;
 
-        if (Game.Instance.ceremonyEligible  && !Game.Instance.ceremonyDone) {
+        if (Game.Instance.ceremonyEligible && !Game.Instance.gameFinished) {
             _currPiece = _ceremonyMapPiece;
             Game.Instance.ceremonyDone = true;
         } else {
@@ -102,8 +102,12 @@ public class ScrollTilemap : MonoBehaviour
                 while (true) {
                     int select = Random.Range(0, eligible.Count);
                     _currPiece = eligible[select];
-                    if (eligible.Count > 1 && _currPiece == _prevPiece) {
-                        eligible.RemoveAt(select);
+                    if (eligible.Count > 1) {
+                        if (_currPiece == _prevPiece)
+                            eligible.RemoveAt(select);
+                        else if (_prevPiece && FinalMismatch()) {
+                            eligible.RemoveAt(select);
+                        } else break;
                     } else 
                         break;
                 }
@@ -114,11 +118,27 @@ public class ScrollTilemap : MonoBehaviour
         _prevPiece = _currPiece;
     }
 
+    bool FinalMismatch() {
+        int shift = MapPiece.FramedMapWidth * (MapPiece.MapHeight - 1);
+        bool prev = false;
+        for (int i = 0; i < MapPiece.MapWidth; i++) {
+            var prevtile = _prevPiece.Tiles[shift + 1 + i];
+            var currtile = _currPiece.Tiles[1 + i];
+            if ((!prevtile || prevtile.quirks.index == 0) &&
+                (!currtile || currtile.quirks.index == 0)) {
+                if (prev == false)
+                    prev = true;
+                else
+                    return false;
+            }
+        } return true;
+    }
+
     void FillNextTiles() {
         var tiles = _currPiece.Tiles;
         for (int i = 0; i < tiles.Length; i++) {
             var tile = tiles[i];
-            var cpos = _writer + new Vector3Int(i % 18, -i / 18, 0);
+            var cpos = _writer + new Vector3Int(i % MapPiece.FramedMapWidth, -i / MapPiece.FramedMapWidth, 0);
             if (tile && tile.quirks.index == 3) {
                 if (cpos.y == -13)
                     _tilemap.SetTile(cpos, null);
@@ -134,13 +154,22 @@ public class ScrollTilemap : MonoBehaviour
         rate = _scrollRate;
     }
 
+    public void Ending() {
+        Game.Instance.ChangeState(Game.eState.Ending);
+        rate = _scrollRate = 0.0f;
+    }
+
     bool IsReadyToFill(float writerWorldY) {
-        return ((_molePos.position.y - writerWorldY) < (_cam.Size.y / 2.0f + 3));
+        return
+            (Game.Instance.State == Game.eState.Playing || Game.Instance.State == Game.eState.Ending) &&
+            !Game.Instance.ceremonyDone &&
+            !TimeMgr.Instance.Paused &&
+            ((_molePos.position.y - writerWorldY) < (_cam.Size.y / 2.0f + 3));
     }
 
     void Update() {
         float writerWorldY = _tilemap.CellToWorld(_writer).y + 1.0f;  //+ new Vector3(0.0f, 1.0f, 0.0f);
-        if (!TimeMgr.Instance.Paused && IsReadyToFill(writerWorldY)) {
+        if (IsReadyToFill(writerWorldY)) {
             FillNext();
         }
 
@@ -150,6 +179,9 @@ public class ScrollTilemap : MonoBehaviour
                 rate = _scrollRate;
             rate += (Game.Instance.worm ? 0.033333f : 0.06666f);
             _body.velocity = new Vector2(0, rate * Time.deltaTime * TimeMgr.Instance.TimeScale);
+        } else {
+            _body.velocity = new Vector2(0.0f, 0.0f);
+            _body.inertia = 0.0f;
         }
     }
 }

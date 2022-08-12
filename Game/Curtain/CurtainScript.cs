@@ -39,6 +39,8 @@ namespace Ilang
 
             fadeIn.SetupImage(curtain);
             fadeOut.SetupImage(curtain);
+            if (preserveRatio)
+                TransitionEvent.PreserveRatio(curtain);
 
             if (fadeInImmediately)
                 FadeIn();

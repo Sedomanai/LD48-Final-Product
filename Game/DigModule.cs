@@ -76,12 +76,13 @@ public class DigModule : MonoBehaviour
             if (max <= _digDepth) {
                 Game.Instance.groundText.ChangeText(_digDepth.ToString());
                 Game.Instance.maxDepth = _digDepth;
-                if (Game.Instance.maxDepth > 150) {
-                    Game.Instance.ceremonyEligible = true;
-                }
 
             } else {
                 Game.Instance.groundText.ChangeText(_digDepth.ToString() + "/" + max.ToString());
+            }
+
+            if (_digDepth > 120) {
+                Game.Instance.ceremonyEligible = true;
             }
         }
     }

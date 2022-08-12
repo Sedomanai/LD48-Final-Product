@@ -8,7 +8,7 @@ using UnityEditor;
 #endif
 
 namespace Ilang
-{ 
+{
     [RequireComponent(typeof(BoxCollider2D))]
     public class Camera2DTrigger : MonoBehaviour
     {
@@ -51,7 +51,8 @@ namespace Ilang
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(Camera2DTrigger))]
-        public class Camera2DTriggerEditor : Editor {
+        public class Camera2DTriggerEditor : Editor
+        {
             public Camera2DTrigger cam { get { return target as Camera2DTrigger; } }
 
             void OnEnable() {
@@ -78,135 +79,10 @@ namespace Ilang
                     cam._flagY.OnInspector2();
                 }
 
+
                 serializedObject.ApplyModifiedProperties();
             }
         }
 #endif
-
-        //void Update() {
-        //   if (_moving) {
-        //       var sub = _subject.transform;
-        //       var cam = _subject.camera2d.transform;
-
-        //       Vector2 target = sub.position;
-        //       Vector2 current = cam.position;
-
-        //       if (_freezeX) {
-        //           target.x = _snapPoint ? _snapPoint.position.x : _box.bounds.center.x;
-        //       }
-        //       if (_freezeY) {
-        //           target.y = _snapPoint ? _snapPoint.position.y : _box.bounds.center.y;
-        //       }
-
-        //       var delta = target - current;
-        //       if (delta.magnitude < _transitionSpeed) {
-        //           cam.position = (Vector3)target + new Vector3(0, 0, cam.position.z);
-        //       } else {
-        //           cam.position += (Vector3)(delta.normalized * _transitionSpeed);
-        //       }
-        //   }
-        //}
     }
-
-
-    //    public class Camera2DTrigger : MonoBehaviour
-    //    {
-    //        // Class declaration
-    //        [System.Serializable]
-    //        public class Camera2DTriggerCompleteEvent : UnityEvent<Vector3> { }
-
-    //        public enum Direction
-    //        {
-    //            Vertical,
-    //            Horizontal
-    //        }
-    //        public enum CurrentDirection
-    //        {
-    //            None,
-    //            Vertical,
-    //            Horizontal
-    //        }
-    //        [SerializeField]
-    //        Direction _triggerDirection = Direction.Vertical;
-    //        [SerializeField]
-    //        Transform _leftOrTopTarget;
-    //        [SerializeField]
-    //        Transform _rightOrBottomTarget;
-    //        [SerializeField]
-    //        Camera2DTriggerCompleteEvent onCompleteEvent;
-
-    //        BoxCollider2D _box;
-    //        public Direction triggerDirection { get { return _triggerDirection; } }
-    //        bool _moving = false;
-
-    //        Vector3 _expectingPos = new Vector3(Mathf.Infinity, 0, 0);
-
-    //        void OnTriggerStay2D(Collider2D col) {
-    //            var subject = col.GetComponent<Camera2DSubject>();
-
-    //            if (subject) {
-    //                Transform tempTarget = null;
-    //                switch (_triggerDirection) {
-    //                    case Direction.Vertical:
-    //                        tempTarget = (subject.transform.position.y > transform.position.y) ? _leftOrTopTarget : _rightOrBottomTarget;
-    //                        break;
-    //                    case Direction.Horizontal:
-    //                        tempTarget = (subject.transform.position.x < transform.position.x) ? _leftOrTopTarget : _rightOrBottomTarget;
-    //                        break;
-    //                }
-
-    //                //if (_expectingPos != tempTarget.position) {
-    //                _expectingPos = tempTarget.position;
-    //                subject.camera2d.transform.DOMove(_expectingPos + new Vector3(0, 0, -10), 0.3f).OnComplete(() => {
-    //                    onCompleteEvent.Invoke(_expectingPos);
-    //                });
-    //                //}
-    //            }
-    //        }
-
-    //        void Awake() {
-    //            _box = gameObject.AddComponentIfNone<BoxCollider2D>();
-    //            _box.isTrigger = true;
-    //        }
-
-    //#if UNITY_EDITOR
-
-    //        [CustomEditor(typeof(Camera2DTrigger))]
-    //        public class Camera2DTriggerEditor : Editor
-    //        {
-    //            private Camera2DTrigger trigg { get { return (target as Camera2DTrigger); } }
-    //            void OnEnable() {
-    //                trigg.gameObject.SetLayer("Camera Trigger 2D");
-    //            }
-    //            public override void OnInspectorGUI() {
-    //                serializedObject.Update();
-    //                EditorGUI.BeginChangeCheck();
-
-    //                trigg._triggerDirection = (Direction)EditorGUILayout.EnumPopup(trigg._triggerDirection, "Trigger Direction");
-
-    //                string lt, rb;
-    //                if (trigg._triggerDirection == Direction.Vertical) {
-    //                    lt = "Top Target"; rb = "Bottom Target";
-    //                } else {
-    //                    lt = "Left Target"; rb = "Right Target";
-    //                }
-
-    //                EditorGUI.indentLevel++;
-    //                trigg._leftOrTopTarget = (Transform)EditorGUILayout.ObjectField(lt, trigg._leftOrTopTarget, typeof(Transform), true);
-    //                trigg._rightOrBottomTarget = (Transform)EditorGUILayout.ObjectField(rb, trigg._rightOrBottomTarget, typeof(Transform), true);
-    //                EditorGUI.indentLevel--;
-
-    //                EditorGUILayout.PropertyField(serializedObject.FindProperty("onCompleteEvent"), true);
-    //                if (EditorGUI.EndChangeCheck()) {
-    //                    EditorUtility.SetDirty(trigg);
-    //                }
-
-    //                serializedObject.ApplyModifiedProperties();
-
-    //            }
-
-    //        }
-
-    //#endif
-    //}
 }
