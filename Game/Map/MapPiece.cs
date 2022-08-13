@@ -53,7 +53,7 @@ public class MapPiece : MonoBehaviour
         gameObject.SetActive(false);
         _mapPiece = GetComponent<Tilemap>();
         List<IlangTile> tiles = new List<IlangTile>();
-        int height = MapHeight + (isEnding ? 16 : 0);
+        int height = MapHeight + (isEnding ? 6 : 0);
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < FramedMapWidth; j++) {
                 tiles.Add(_mapPiece.GetTile<IlangTile>(new Vector3Int(j, -i-1, 0)));
